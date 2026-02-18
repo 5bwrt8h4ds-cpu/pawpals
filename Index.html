@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Paw Pals</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paw Pals">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111110">
+<meta name="application-name" content="Paw Pals">
+<meta name="description" content="Pet walking & care tracker for Paw Pals">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23111110'/%3E%3Cstop offset='100%25' stop-color='%232a2a28'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Ctext x='256' y='290' text-anchor='middle' font-size='220' fill='white'%3E🐾%3C/text%3E%3Ctext x='256' y='420' text-anchor='middle' font-family='Georgia,serif' font-size='72' font-weight='bold' fill='white' opacity='.85'%3EPaw Pals%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--white:#FFFFFF;--off:#F7F6F3;--black:#111110;--gray:#888884;--border:#E8E7E3;--blue-block:#D4E8F7;--green-block:#D4EFE0;--yellow-block:#F7EFC8;--pink-block:#F7D4E8;--lavender-block:#E3D4F7;--red-block:#F7D4D4;--radius-card:20px;--radius-pill:100px;--radius-block:24px;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--off);color:var(--black);min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+
+.install-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:var(--black);color:var(--white);padding:calc(var(--safe-top) + 12px) 20px 14px;text-align:center;font-size:.82rem;font-weight:600;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.install-banner.show{display:block}
+.install-banner .ib-close{position:absolute;top:calc(var(--safe-top) + 8px);right:14px;background:rgba(255,255,255,.15);border:none;color:var(--white);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.install-banner .ib-steps{font-weight:400;opacity:.7;font-size:.74rem;margin-top:4px}
+
+.app-shell{max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--white);position:relative;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,0,0,.08)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:calc(var(--safe-top) + 16px) 24px 12px;background:var(--white);position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border)}
+.topbar-brand{font-family:var(--font-display);font-size:1.2rem;font-weight:700;letter-spacing:-.3px;color:var(--black)}
+.topbar-brand span{color:var(--gray);font-weight:300}
+.topbar-right{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:background .15s;-webkit-tap-highlight-color:transparent}
+
+.content{flex:1;overflow-y:auto;padding-bottom:calc(100px + var(--safe-bottom));-webkit-overflow-scrolling:touch}
+.screen{display:none}.screen.active{display:block}
+
+.hero{padding:24px 24px 20px}
+.hero-eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--gray);margin-bottom:8px}
+.hero-heading{font-family:var(--font-display);font-size:2.6rem;font-weight:600;line-height:1.05;letter-spacing:-.5px;color:var(--black)}
+.hero-heading em{font-style:italic;font-weight:300;color:var(--gray)}
+
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 24px;margin-bottom:28px}
+.action-block{border-radius:var(--radius-block);padding:20px 18px;cursor:pointer;transition:transform .15s;min-height:115px;display:flex;flex-direction:column;justify-content:space-between;-webkit-tap-highlight-color:transparent}
+.action-block:active{transform:scale(.97)}
+.action-block.blue{background:var(--blue-block)}.action-block.green{background:var(--green-block)}.action-block.yellow{background:var(--yellow-block)}.action-block.black{background:var(--black)}
+.ab-icon{font-size:1.4rem}.ab-label{font-size:.95rem;font-weight:700;letter-spacing:-.2px}
+.action-block.black .ab-label{color:var(--white)}
+
+.stat-strip{display:flex;gap:10px;padding:0 24px;overflow-x:auto;scrollbar-width:none;margin-bottom:28px}
+.stat-strip::-webkit-scrollbar{display:none}
+.stat-pill{flex-shrink:0;display:flex;align-items:center;gap:10px;background:var(--off);border-radius:var(--radius-pill);padding:10px 16px;border:1.5px solid var(--border)}
+.sp-num{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1}
+.sp-label{font-size:.72rem;font-weight:500;color:var(--gray);white-space:nowrap;line-height:1.3}
+
+.section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;padding:0 24px}
+.section-head h2{font-family:var(--font-display);font-size:1.25rem;font-weight:600;letter-spacing:-.3px}
+.section-head a{font-size:.78rem;font-weight:500;color:var(--gray);cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent}
+
+.walk-card{margin:0 24px 10px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-card);padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.walk-dog-avatar{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.c0{background:var(--blue-block)}.c1{background:var(--green-block)}.c2{background:var(--yellow-block)}.c3{background:var(--pink-block)}.c4{background:var(--lavender-block)}
+.walk-info{flex:1;min-width:0}
+.walk-dog-name{font-weight:700;font-size:1rem;letter-spacing:-.2px;margin-bottom:4px}
+.walk-meta{font-size:.76rem;color:var(--gray);font-weight:500;display:flex;flex-wrap:wrap;gap:5px}
+.dot{color:var(--border)}
+.walk-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.walk-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap}
+
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:var(--radius-pill);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.badge-pending{background:var(--yellow-block);color:#7A6200}
+.badge-completed{background:var(--green-block);color:#1A5E33}
+.badge-cancelled{background:var(--border);color:var(--gray)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:var(--radius-pill);border:none;font-family:var(--font-body);font-size:.85rem;font-weight:600;cursor:pointer;transition:transform .12s;letter-spacing:-.1px;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.96)}
+.btn-black{background:var(--black);color:var(--white)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--black)}
+.btn-green{background:var(--green-block);color:#1A5E33}
+.btn-red{background:var(--red-block);color:#9B1C1C}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{padding:7px 14px;font-size:.76rem}
+
+.form-section{padding:0 24px 24px}
+.form-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:7px}
+.form-control{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:14px;font-family:var(--font-body);font-size:16px;color:var(--black);background:var(--white);outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none}
+.form-control:focus{border-color:var(--black)}
+.form-control::placeholder{color:#C0C0BE}
+.form-row{margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+textarea.form-control{min-height:80px;resize:vertical;line-height:1.5}
+
+.walker-selector{display:flex;gap:8px;margin-bottom:16px}
+.walker-chip{flex:1;padding:11px 10px;border-radius:14px;border:1.5px solid var(--border);background:var(--white);text-align:center;font-family:var(--font-body);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--gray);-webkit-tap-highlight-color:transparent}
+.walker-chip.active{border-color:var(--black);background:var(--black);color:var(--white)}
+
+.filter-row{display:flex;gap:8px;padding:0 24px 20px;overflow-x:auto;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-chip{flex-shrink:0;padding:7px 16px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:var(--white);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--gray);white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.filter-chip.active{background:var(--black);color:var(--white);border-color:var(--black)}
+
+.search-wrap{padding:0 24px 16px;position:relative}
+.search-icon{position:absolute;left:40px;top:50%;transform:translateY(-50%);font-size:.85rem;color:var(--gray);pointer-events:none}
+.search-input{width:100%;padding:12px 16px 12px 42px;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:var(--font-body);font-size:16px;background:var(--off);outline:none;color:var(--black);transition:border-color .15s,background .15s}
+.search-input:focus{border-color:var(--black);background:var(--white)}
+
+.dog-card{margin:0 24px 10px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-card);padding:18px;display:flex;gap:14px;align-items:center}
+.dog-avatar{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.dog-name-label{font-weight:700;font-size:1rem;letter-spacing:-.2px;margin-bottom:3px}
+.dog-sub{font-size:.76rem;color:var(--gray);font-weight:500}
+
+.earnings-banner{margin:0 24px 14px;background:var(--black);border-radius:var(--radius-card);padding:24px;color:var(--white);position:relative;overflow:hidden}
+.earnings-banner::before{content:'🐾';position:absolute;right:16px;bottom:-14px;font-size:6rem;opacity:.07}
+.eb-label{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:8px}
+.eb-amount{font-family:var(--font-display);font-size:3.2rem;font-weight:700;line-height:1;letter-spacing:-1px}
+.eb-sub{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:8px}
+.earnings-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 24px 24px}
+.split-card{background:var(--off);border:1.5px solid var(--border);border-radius:var(--radius-card);padding:16px}
+.sc-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:8px}
+.sc-amount{font-family:var(--font-display);font-size:1.9rem;font-weight:700;letter-spacing:-.5px}
+.month-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.month-row:last-child{border-bottom:none}
+.month-name{font-weight:600;font-size:.88rem;min-width:80px}
+.month-bar-wrap{flex:1;margin:0 14px}
+.month-bar-bg{background:var(--off);border-radius:100px;height:6px;overflow:hidden}
+.month-bar-fill{height:100%;border-radius:100px;background:var(--black);transition:width .5s}
+.month-amount{font-weight:700;font-size:.88rem;min-width:34px;text-align:right}
+.divider{height:1px;background:var(--border);margin:0 24px 24px}
+
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:12px 16px calc(12px + var(--safe-bottom));display:flex;justify-content:space-around;align-items:flex-end;z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 14px;border-radius:14px;transition:background .15s;border:none;background:transparent;-webkit-tap-highlight-color:transparent}
+.nav-icon{font-size:1.2rem}
+.nav-label{font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gray)}
+.nav-item.active .nav-label{color:var(--black)}
+.fab{width:54px;height:54px;background:var(--black);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1.5rem;box-shadow:0 4px 18px rgba(0,0,0,.28);transition:transform .15s;margin-top:-28px;-webkit-tap-highlight-color:transparent}
+.fab:active{transform:scale(.92)}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(17,17,16,.45);backdrop-filter:blur(4px);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:430px;padding:0 0 calc(32px + var(--safe-bottom));max-height:85vh;overflow-y:auto;animation:slideUp .25s cubic-bezier(.4,0,.2,1)}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:4px;border-radius:100px;background:var(--border);margin:14px auto 20px}
+.modal-title-row{display:flex;justify-content:space-between;align-items:center;padding:0 24px 20px}
+.modal-title{font-family:var(--font-display);font-size:1.5rem;font-weight:600;letter-spacing:-.3px}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--off);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--gray)}
+
+#toast{position:fixed;bottom:calc(106px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(16px);background:var(--black);color:var(--white);padding:11px 22px;border-radius:var(--radius-pill);font-size:.84rem;font-weight:600;opacity:0;transition:transform .25s,opacity .25s;pointer-events:none;z-index:999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.empty-state{text-align:center;padding:48px 24px}
+.empty-state .es-icon{font-size:2.4rem;margin-bottom:12px;opacity:.35}
+.empty-state p{font-size:.88rem;color:var(--gray);font-weight:500}
+
+.pay-hero{padding:24px 24px 20px}
+.qr-card{margin:0 24px 16px;background:var(--white);border:1.5px solid var(--border);border-radius:28px;padding:32px 24px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.qr-logo-row{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.qr-apple-badge{display:flex;align-items:center;gap:6px;background:var(--black);color:var(--white);border-radius:var(--radius-pill);padding:7px 14px;font-size:.82rem;font-weight:700}
+.qr-wrap{position:relative;background:var(--white);border-radius:20px;padding:16px;border:2px solid var(--border);margin-bottom:20px}
+.qr-wrap canvas{display:block;border-radius:8px}
+.qr-center-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:var(--white);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.pay-handle{font-family:var(--font-display);font-size:1.5rem;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.pay-handle-sub{font-size:.8rem;color:var(--gray);font-weight:500}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 24px 16px}
+.pay-method-card{background:var(--off);border:1.5px solid var(--border);border-radius:var(--radius-card);padding:18px 16px;text-align:center}
+.pay-method-icon{font-size:1.8rem;margin-bottom:8px}
+.pay-method-label{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.pay-method-sub{font-size:.72rem;color:var(--gray);font-weight:500;line-height:1.4}
+.pay-tip-card{margin:0 24px 16px;background:var(--green-block);border-radius:var(--radius-card);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.pay-tip-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.pay-tip-text{font-size:.8rem;font-weight:600;color:#1A5E33;line-height:1.5}
+.pay-edit-row{margin:0 24px 24px;display:flex;gap:10px;align-items:center}
+.pay-edit-input{flex:1;padding:11px 14px;border:1.5px solid var(--border);border-radius:14px;font-family:var(--font-body);font-size:16px;color:var(--black);background:var(--white);outline:none}
+.pay-edit-input:focus{border-color:var(--black)}
+
+/* Settings */
+.settings-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
+.settings-item:last-child{border-bottom:none}
+.si-left{display:flex;align-items:center;gap:12px}
+.si-icon{font-size:1.2rem;width:36px;height:36px;background:var(--off);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.si-label{font-weight:600;font-size:.9rem}
+.si-sub{font-size:.72rem;color:var(--gray);font-weight:500;margin-top:2px}
+.si-right{font-size:.85rem;color:var(--gray);cursor:pointer}
+
+.share-fab{position:fixed;top:calc(var(--safe-top) + 68px);right:max(calc((100vw - 430px)/2 + 18px),18px);width:42px;height:42px;background:var(--black);border:none;border-radius:50%;color:var(--white);font-size:1.1rem;cursor:pointer;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.share-fab:active{transform:scale(.9)}
+
+/* Confirm dialog */
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(17,17,16,.5);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--white);border-radius:24px;padding:28px 24px;width:calc(100% - 48px);max-width:340px;text-align:center;animation:slideUp .2s cubic-bezier(.4,0,.2,1)}
+.confirm-title{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin-bottom:8px}
+.confirm-msg{font-size:.85rem;color:var(--gray);margin-bottom:24px;line-height:1.5}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns .btn{flex:1}
+
+@media(max-width:430px){.app-shell{box-shadow:none}.share-fab{right:18px}}
+</style>
+</head>
+<body>
+
+<div class="install-banner" id="install-banner">
+  🐾 Add <strong>Paw Pals</strong> to your Home Screen for the full app experience!
+  <div class="ib-steps">Tap <strong>Share ↗</strong> then <strong>"Add to Home Screen"</strong></div>
+  <button class="ib-close" onclick="dismissInstall()">✕</button>
+</div>
+
+<button class="share-fab" onclick="shareApp()" title="Share this app">↗</button>
+
+<div class="app-shell">
+  <div class="topbar">
+    <div class="topbar-brand">Paw <span>Pals</span></div>
+    <div class="topbar-right">
+      <div class="icon-btn" onclick="showTab('earnings')">💰</div>
+      <div class="icon-btn" onclick="showTab('settings')">⚙️</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- HOME -->
+    <div id="screen-home" class="screen active">
+      <div class="hero"><div class="hero-eyebrow" id="home-date">Today</div><div class="hero-heading">Good morning,<br><em>ready to walk?</em></div></div>
+      <div class="action-grid">
+        <div class="action-block blue" onclick="showTab('new')"><div class="ab-icon">➕</div><div class="ab-label">New Walk</div></div>
+        <div class="action-block green" onclick="showTab('log')"><div class="ab-icon">📋</div><div class="ab-label">Walk Log</div></div>
+        <div class="action-block yellow" onclick="showTab('dogs')"><div class="ab-icon">🐾</div><div class="ab-label">Our Pets</div></div>
+        <div class="action-block black" onclick="showTab('pay')"><div class="ab-icon">💳</div><div class="ab-label">Get Paid</div></div>
+      </div>
+      <div class="stat-strip">
+        <div class="stat-pill"><div class="sp-num" id="s-total">0</div><div class="sp-label">Total<br>Walks</div></div>
+        <div class="stat-pill"><div class="sp-num" id="s-pending">0</div><div class="sp-label">Pending<br>Today</div></div>
+        <div class="stat-pill"><div class="sp-num" id="s-dogs">0</div><div class="sp-label">Pets<br>Registered</div></div>
+        <div class="stat-pill"><div class="sp-num" id="s-earned">$0</div><div class="sp-label">Total<br>Earned</div></div>
+      </div>
+      <div class="section-head"><h2>Today</h2><a onclick="showTab('log')">See all →</a></div>
+      <div id="home-today"></div>
+      <div class="section-head" style="margin-top:10px"><h2>Coming Up</h2><a onclick="showTab('log')">See all →</a></div>
+      <div id="home-upcoming"></div>
+    </div>
+
+    <!-- NEW WALK -->
+    <div id="screen-new" class="screen">
+      <div class="hero"><div class="hero-eyebrow" id="form-eyebrow">Schedule</div><div class="hero-heading" id="form-heading">New walk<br><em>request</em></div></div>
+      <div class="form-section">
+        <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="f-dog" placeholder="e.g. Buddy" list="dog-suggestions" autocomplete="off"><datalist id="dog-suggestions"></datalist></div>
+        <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="ft-dog" onclick="selectFormPetType('dog')">🐶 Dog</div><div class="walker-chip" id="ft-cat" onclick="selectFormPetType('cat')">🐱 Cat</div></div></div>
+        <div class="form-grid"><div><label class="form-label">Unit #</label><input class="form-control" type="text" id="f-unit" placeholder="4B"></div><div><label class="form-label">Owner Name</label><input class="form-control" type="text" id="f-owner" placeholder="Mrs. Smith"></div></div>
+        <div class="form-grid"><div><label class="form-label">Date</label><input class="form-control" type="date" id="f-date"></div><div><label class="form-label">Time</label><input class="form-control" type="time" id="f-time"></div></div>
+        <div class="form-grid"><div><label class="form-label">Duration</label><select class="form-control" id="f-duration"><option value="15">15 min</option><option value="20">20 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">1 hour</option></select></div><div><label class="form-label">Rate ($)</label><input class="form-control" type="number" id="f-rate" value="15" min="1"></div></div>
+        <div class="form-row"><label class="form-label">Walker</label><div class="walker-selector">        <div class="walker-chip active" id="wc-both" onclick="selectWalker('Both')">🤝 Both</div><div class="walker-chip" id="wc-walker1" onclick="selectWalker('Walker 1')">Clark C.</div><div class="walker-chip" id="wc-walker2" onclick="selectWalker('Walker 2')">Vayda H.</div></div></div>
+        <div class="form-row"><label class="form-label">Notes</label><textarea class="form-control" id="f-notes" placeholder="Special instructions..."></textarea></div>
+        <button class="btn btn-black btn-full" style="padding:15px;font-size:.95rem" id="form-submit" onclick="submitForm()">Add Walk Request</button>
+        <button class="btn btn-ghost btn-full" style="padding:13px;font-size:.88rem;margin-top:10px;display:none" id="form-cancel" onclick="cancelEdit()">Cancel Editing</button>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div id="screen-log" class="screen">
+      <div class="hero"><div class="hero-eyebrow">History</div><div class="hero-heading">Walk<br><em>log</em></div></div>
+      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" type="text" id="search-input" placeholder="Search dogs, owners, units..."></div>
+      <div class="filter-row"><div class="filter-chip active" onclick="setFilter('all',this)">All</div><div class="filter-chip" onclick="setFilter('pending',this)">Pending</div><div class="filter-chip" onclick="setFilter('completed',this)">Completed</div><div class="filter-chip" onclick="setFilter('cancelled',this)">Cancelled</div></div>
+      <div id="log-list"></div>
+    </div>
+
+    <!-- DOGS -->
+    <div id="screen-dogs" class="screen">
+      <div class="hero"><div class="hero-eyebrow">Registry</div><div class="hero-heading">Our<br><em>pets</em></div></div>
+      <div id="dog-list"></div>
+      <div class="divider"></div>
+      <div class="form-section">
+        <div style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;margin-bottom:18px" id="dog-form-title">Add New Pet</div>
+        <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="pt-dog" onclick="selectPetType('dog')">🐶 Dog</div><div class="walker-chip" id="pt-cat" onclick="selectPetType('cat')">🐱 Cat</div></div></div>
+        <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="nd-name" placeholder="Fluffy"></div>
+        <div class="form-grid"><div><label class="form-label">Unit</label><input class="form-control" type="text" id="nd-unit" placeholder="3A"></div><div><label class="form-label">Breed</label><input class="form-control" type="text" id="nd-breed" placeholder="Poodle"></div></div>
+        <div class="form-row"><label class="form-label">Owner Name</label><input class="form-control" type="text" id="nd-owner" placeholder="Smith family"></div>
+        <div class="form-row"><label class="form-label">Notes</label><input class="form-control" type="text" id="nd-notes" placeholder="Friendly, loves fetch"></div>
+        <button class="btn btn-black btn-full" style="padding:14px;font-size:.95rem" id="dog-form-submit" onclick="submitDogForm()">Add Pet</button>
+        <button class="btn btn-ghost btn-full" style="padding:13px;font-size:.88rem;margin-top:10px;display:none" id="dog-form-cancel" onclick="cancelDogEdit()">Cancel Editing</button>
+      </div>
+    </div>
+
+    <!-- EARNINGS -->
+    <div id="screen-earnings" class="screen">
+      <div class="hero"><div class="hero-eyebrow">Finance</div><div class="hero-heading">Earnings<br><em>tracker</em></div></div>
+      <div class="earnings-banner"><div class="eb-label">Total Earned</div><div class="eb-amount" id="e-total">$0</div><div class="eb-sub" id="e-subtitle">from 0 completed walks</div></div>
+      <div class="earnings-split"><div class="split-card"><div class="sc-label">Clark C.</div><div class="sc-amount" id="e-w1">$0</div></div><div class="split-card"><div class="sc-label">Vayda H.</div><div class="sc-amount" id="e-w2">$0</div></div></div>
+      <div class="section-head"><h2>By Month</h2></div>
+      <div style="padding:0 24px;margin-bottom:28px" id="monthly-chart"></div>
+      <div class="section-head"><h2>Recent Walks</h2></div>
+      <div id="earnings-list"></div>
+    </div>
+
+    <!-- PAY -->
+    <div id="screen-pay" class="screen">
+      <div class="pay-hero"><div class="hero-eyebrow">Apple Cash</div><div class="hero-heading">Pay<br><em>right here</em></div></div>
+      <div class="qr-card">
+        <div class="qr-logo-row"><div class="qr-apple-badge"> Apple Cash</div></div>
+        <div class="qr-wrap"><canvas id="qr-canvas" width="200" height="200"></canvas><div class="qr-center-logo">🐾</div></div>
+        <div class="pay-handle" id="pay-handle-display">$PawPals</div>
+        <div class="pay-handle-sub">Scan to pay with Apple Cash</div>
+      </div>
+      <div class="pay-edit-row"><input class="pay-edit-input" type="text" id="pay-handle-input" placeholder="Enter your $Cashtag or Apple ID" value="$PawPals"><button class="btn btn-black btn-sm" onclick="updatePayHandle()">Update QR</button></div>
+      <div class="section-head"><h2>How to Pay</h2></div>
+      <div class="pay-methods">
+        <div class="pay-method-card"><div class="pay-method-icon">📷</div><div class="pay-method-label">Scan QR</div><div class="pay-method-sub">Open Camera and point at QR code</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">📲</div><div class="pay-method-label">Tap to Pay</div><div class="pay-method-sub">Hold phones together for Apple Pay</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">💬</div><div class="pay-method-label">iMessage</div><div class="pay-method-sub">Send Apple Cash via Messages</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">🔗</div><div class="pay-method-label">Share Link</div><div class="pay-method-sub">Send payment link via text</div></div>
+      </div>
+      <div class="pay-tip-card"><div class="pay-tip-icon">💡</div><div class="pay-tip-text">Set up Apple Cash Family in Wallet → Settings → Apple Cash → Family Sharing so both walkers share one account.</div></div>
+      <div style="padding:0 24px 8px"><button class="btn btn-ghost btn-full" style="padding:14px" onclick="showTab('earnings')">💰 View Earnings Tracker</button></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="screen-settings" class="screen">
+      <div class="hero"><div class="hero-eyebrow">App</div><div class="hero-heading">Settings</div></div>
+      <div style="padding:0 24px">
+        <div class="settings-item">
+          <div class="si-left"><div class="si-icon">👤</div><div><div class="si-label">Walker 1 Name</div><div class="si-sub">Customize the first walker's name</div></div></div>
+          <input class="form-control" style="width:120px;padding:9px 12px;font-size:.85rem;text-align:right" id="set-w1" placeholder="Walker 1" oninput="saveSettings()">
+        </div>
+        <div class="settings-item">
+          <div class="si-left"><div class="si-icon">👤</div><div><div class="si-label">Walker 2 Name</div><div class="si-sub">Customize the second walker's name</div></div></div>
+          <input class="form-control" style="width:120px;padding:9px 12px;font-size:.85rem;text-align:right" id="set-w2" placeholder="Walker 2" oninput="saveSettings()">
+        </div>
+        <div class="settings-item">
+          <div class="si-left"><div class="si-icon">💵</div><div><div class="si-label">Default Rate</div><div class="si-sub">Default price per walk</div></div></div>
+          <input class="form-control" type="number" style="width:80px;padding:9px 12px;font-size:.85rem;text-align:right" id="set-rate" value="15" min="1" oninput="saveSettings()">
+        </div>
+        <div class="settings-item">
+          <div class="si-left"><div class="si-icon">💳</div><div><div class="si-label">Payment Handle</div><div class="si-sub">Your Apple Cash / Cashtag</div></div></div>
+          <input class="form-control" style="width:120px;padding:9px 12px;font-size:.85rem;text-align:right" id="set-handle" placeholder="$PawPals" oninput="saveSettings()">
+        </div>
+        <div class="divider" style="margin:24px 0"></div>
+        <div class="settings-item" style="border:none">
+          <div class="si-left"><div class="si-icon">🗑️</div><div><div class="si-label" style="color:#9B1C1C">Reset All Data</div><div class="si-sub">Delete all walks, pets, and settings</div></div></div>
+          <button class="btn btn-red btn-sm" onclick="confirmResetAll()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="showTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-item" onclick="showTab('log')"><span class="nav-icon">📋</span><span class="nav-label">Log</span></button>
+    <button class="fab" onclick="showTab('new')">+</button>
+    <button class="nav-item" onclick="showTab('dogs')"><span class="nav-icon">🐾</span><span class="nav-label">Pets</span></button>
+    <button class="nav-item" onclick="showTab('pay')"><span class="nav-icon">💳</span><span class="nav-label">Pay</span></button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title-row"><div class="modal-title" id="modal-title">Details</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body" style="padding:0 24px"></div>
+    <div id="modal-actions" style="padding:20px 24px 0;display:flex;gap:10px;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirm-dialog">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <div class="confirm-msg" id="confirm-msg">This action cannot be undone.</div>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-red" id="confirm-yes" onclick="closeConfirm()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── PWA SETUP ─────────────────────────────────────────────
+(function generateIcon(){
+  const c=document.createElement('canvas');c.width=180;c.height=180;
+  const ctx=c.getContext('2d');ctx.fillStyle='#111110';ctx.beginPath();ctx.roundRect(0,0,180,180,40);ctx.fill();
+  ctx.font='72px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🐾',90,75);
+  ctx.fillStyle='#fff';ctx.font='bold 24px Georgia,serif';ctx.fillText('Paw Pals',90,140);
+  const link=document.createElement('link');link.rel='apple-touch-icon';link.href=c.toDataURL('image/png');document.head.appendChild(link);
+})();
+(function injectManifest(){
+  const m={name:'Paw Pals',short_name:'Paw Pals',description:'Pet walking & care tracker',start_url:location.href.split('?')[0],display:'standalone',background_color:'#FFFFFF',theme_color:'#111110',icons:[{src:document.querySelector('link[rel="icon"]')?.href||'',sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
+  const link=document.createElement('link');link.rel='manifest';link.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));document.head.appendChild(link);
+})();
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+if(!isStandalone&&!sessionStorage.getItem('pp_ib_dismissed'))setTimeout(()=>document.getElementById('install-banner').classList.add('show'),1500);
+function dismissInstall(){document.getElementById('install-banner').classList.remove('show');sessionStorage.setItem('pp_ib_dismissed','1');}
+
+async function shareApp(){
+  const sd={title:'Paw Pals',text:'🐾 Check out Paw Pals — our pet walking & care tracker app!',url:location.href};
+  try{if(navigator.share)await navigator.share(sd);else{await navigator.clipboard.writeText(location.href);toast('Link copied!');}}
+  catch(e){if(e.name!=='AbortError')try{await navigator.clipboard.writeText(location.href);toast('Link copied!');}catch(_){toast('Copy this URL to share');}}
+}
+
+// ── DATA ──────────────────────────────────────────────────
+const KEY='pawpals_v4';
+let data;
+try{data=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){data={};}
+if(!data.requests)data.requests=[];
+if(!data.dogs)data.dogs=[];
+if(!data.settings)data.settings={w1:'Clark C.',w2:'Vayda H.',rate:15,handle:'$PawPals'};
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+
+function fmt(d){return d.toISOString().split('T')[0];}
+function today(){return fmt(new Date());}
+function uid(p){return p+Date.now()+Math.random().toString(36).slice(2,5);}
+function fmtTime(t){if(!t)return'';const[h,m]=t.split(':').map(Number);return`${h%12||12}:${m.toString().padStart(2,'0')} ${h>=12?'PM':'AM'}`;}
+const COLORS=['c0','c1','c2','c3','c4'];
+function dogColor(n){let h=0;for(let c of n)h=(h*31+c.charCodeAt(0))%5;return COLORS[h];}
+function petEmoji(pt){return pt==='cat'?'🐱':'🐶';}
+function w1Name(){return data.settings.w1||'Walker 1';}
+function w2Name(){return data.settings.w2||'Walker 2';}
+function walkerDisplay(w){if(w==='Walker 1')return w1Name();if(w==='Walker 2')return w2Name();return'Both';}
+
+// ── SELECTORS ─────────────────────────────────────────────
+let selWalker='Both';
+function selectWalker(w){selWalker=w;['both','walker1','walker2'].forEach(k=>document.getElementById('wc-'+k)?.classList.remove('active'));document.getElementById('wc-'+{Both:'both','Walker 1':'walker1','Walker 2':'walker2'}[w])?.classList.add('active');}
+let selFormPetType='dog';
+function selectFormPetType(t){selFormPetType=t;['dog','cat'].forEach(k=>document.getElementById('ft-'+k)?.classList.remove('active'));document.getElementById('ft-'+t)?.classList.add('active');}
+let selNewPetType='dog';
+function selectPetType(t){selNewPetType=t;['dog','cat'].forEach(k=>document.getElementById('pt-'+k)?.classList.remove('active'));document.getElementById('pt-'+t)?.classList.add('active');}
+
+// ── TABS ──────────────────────────────────────────────────
+function showTab(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  const navMap={home:0,log:1,dogs:2,pay:3};
+  if(navMap[id]!==undefined)document.querySelectorAll('.nav-item')[navMap[id]]?.classList.add('active');
+  if(id==='pay')setTimeout(renderQR,50);
+  if(id==='settings')loadSettings();
+  if(id==='new'&&!editingWalkId){resetWalkForm();}
+  renderAll();
+  document.querySelector('.content').scrollTop=0;
+}
+
+// ── QR ────────────────────────────────────────────────────
+let qrInstance=null,currentPayHandle='$PawPals';
+function renderQR(){
+  const url=currentPayHandle.startsWith('$')?`https://cash.app/${currentPayHandle}`:`https://cash.app/$${currentPayHandle.replace(/^@/,'')}`;
+  const container=document.getElementById('qr-canvas');if(!container)return;
+  container.innerHTML='';container.removeAttribute('style');
+  try{if(qrInstance){qrInstance.clear();qrInstance=null;}}catch(e){}
+  const tmp=document.createElement('div');document.body.appendChild(tmp);
+  try{
+    qrInstance=new QRCode(tmp,{text:url,width:200,height:200,colorDark:'#111110',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+    setTimeout(()=>{const g=tmp.querySelector('canvas');if(g){container.parentNode.replaceChild(g,container);g.id='qr-canvas';g.style.borderRadius='8px';g.style.display='block';}document.body.removeChild(tmp);},100);
+  }catch(e){document.body.removeChild(tmp);}
+}
+function updatePayHandle(){
+  const input=document.getElementById('pay-handle-input').value.trim();if(!input){toast('Please enter a handle');return;}
+  currentPayHandle=input.startsWith('$')||input.includes('@')?input:'$'+input;
+  document.getElementById('pay-handle-display').textContent=currentPayHandle;
+  document.getElementById('pay-handle-input').value=currentPayHandle;
+  data.settings.handle=currentPayHandle;save();
+  renderQR();toast('QR code updated!');
+}
+
+// ── SETTINGS ──────────────────────────────────────────────
+function loadSettings(){
+  document.getElementById('set-w1').value=data.settings.w1||'';
+  document.getElementById('set-w2').value=data.settings.w2||'';
+  document.getElementById('set-rate').value=data.settings.rate||15;
+  document.getElementById('set-handle').value=data.settings.handle||'';
+}
+function saveSettings(){
+  data.settings.w1=document.getElementById('set-w1').value.trim();
+  data.settings.w2=document.getElementById('set-w2').value.trim();
+  data.settings.rate=Number(document.getElementById('set-rate').value)||15;
+  data.settings.handle=document.getElementById('set-handle').value.trim();
+  if(data.settings.handle)currentPayHandle=data.settings.handle;
+  save();
+}
+
+// ── CONFIRM DIALOG ────────────────────────────────────────
+let confirmCallback=null;
+function showConfirm(title,msg,yesLabel,cb){
+  document.getElementById('confirm-title').textContent=title;
+  document.getElementById('confirm-msg').textContent=msg;
+  document.getElementById('confirm-yes').textContent=yesLabel||'Delete';
+  confirmCallback=cb;
+  document.getElementById('confirm-dialog').classList.add('open');
+}
+function closeConfirm(){
+  document.getElementById('confirm-dialog').classList.remove('open');
+  if(confirmCallback){const cb=confirmCallback;confirmCallback=null;if(event&&event.target.id==='confirm-yes')cb();}
+  else confirmCallback=null;
+}
+
+// ── FILTERS / SEARCH ──────────────────────────────────────
+let currentFilter='all',searchQ='';
+function setFilter(f,el){currentFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderLog();}
+document.getElementById('search-input').addEventListener('input',e=>{searchQ=e.target.value.toLowerCase();renderLog();});
+
+// ── RENDER ────────────────────────────────────────────────
+function renderAll(){renderHome();renderLog();renderDogs();renderEarnings();}
+
+function renderHome(){
+  const d=today();
+  document.getElementById('home-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const todayW=data.requests.filter(r=>r.date===d&&r.status!=='cancelled');
+  const upcoming=data.requests.filter(r=>r.date>d&&r.status==='pending').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  document.getElementById('home-today').innerHTML=todayW.length?todayW.map(walkCardHTML).join(''):'<div class="empty-state"><div class="es-icon">🌤️</div><p>No walks scheduled today.</p></div>';
+  document.getElementById('home-upcoming').innerHTML=upcoming.slice(0,3).length?upcoming.slice(0,3).map(walkCardHTML).join(''):'<div class="empty-state"><div class="es-icon">📅</div><p>Nothing upcoming yet.</p></div>';
+  document.getElementById('s-total').textContent=data.requests.length;
+  document.getElementById('s-pending').textContent=data.requests.filter(r=>r.status==='pending'&&r.date===d).length;
+  document.getElementById('s-dogs').textContent=data.dogs.length;
+  document.getElementById('s-earned').textContent='$'+data.requests.filter(r=>r.status==='completed').reduce((a,r)=>a+Number(r.rate||0),0);
+}
+
+function walkCardHTML(r){
+  const col=dogColor(r.dog),bc='badge-'+r.status,bt={pending:'Pending',completed:'Done',cancelled:'Cancelled'}[r.status],icon=petEmoji(r.petType);
+  return`<div class="walk-card"><div class="walk-dog-avatar ${col}">${icon}</div><div class="walk-info"><div class="walk-dog-name">${r.dog}</div><div class="walk-meta">${r.petType==='cat'?'<span style="font-size:.7rem;background:var(--lavender-block);color:#5B21B6;padding:1px 7px;border-radius:20px;font-weight:700">Cat</span><span class="dot">·</span>':''}${r.owner?`<span>${r.owner}</span><span class="dot">·</span>`:''}${r.unit?`<span>Unit ${r.unit}</span><span class="dot">·</span>`:''}<span>${r.date}</span>${r.time?`<span class="dot">·</span><span>${fmtTime(r.time)}</span>`:''}${r.duration?`<span class="dot">·</span><span>${r.duration}m</span>`:''}<span class="dot">·</span><span>${walkerDisplay(r.walker)}</span></div>${r.notes?`<div style="font-size:.75rem;color:var(--gray);margin-top:4px;font-style:italic">${r.notes}</div>`:''}<div class="walk-actions"><button class="btn btn-ghost btn-sm" onclick="openDetail('${r.id}')">Details</button><button class="btn btn-ghost btn-sm" onclick="editWalk('${r.id}')">✏️ Edit</button>${r.status==='pending'?`<button class="btn btn-green btn-sm" onclick="markDone('${r.id}')">✓ Done</button>`:''}<button class="btn btn-red btn-sm" onclick="deleteWalk('${r.id}')">🗑️</button></div></div><div class="walk-right"><span class="badge ${bc}">${bt}</span><span style="font-family:var(--font-display);font-size:1.15rem;font-weight:700">$${r.rate}</span></div></div>`;
+}
+
+function renderLog(){
+  let list=[...data.requests].sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  if(currentFilter!=='all')list=list.filter(r=>r.status===currentFilter);
+  if(searchQ)list=list.filter(r=>[r.dog,r.owner,r.unit,r.walker,r.notes].join(' ').toLowerCase().includes(searchQ));
+  document.getElementById('log-list').innerHTML=list.length?list.map(walkCardHTML).join(''):'<div class="empty-state"><div class="es-icon">🔍</div><p>Nothing found.</p></div>';
+}
+
+function renderDogs(){
+  document.getElementById('dog-suggestions').innerHTML=data.dogs.map(d=>`<option value="${d.name}">`).join('');
+  document.getElementById('dog-list').innerHTML=data.dogs.length?data.dogs.map(d=>{
+    const v=data.requests.filter(r=>r.dog===d.name).length,col=dogColor(d.name),icon=petEmoji(d.petType);
+    return`<div class="dog-card"><div class="dog-avatar ${col}">${icon}</div><div style="flex:1"><div class="dog-name-label">${d.name} <span style="font-size:.72rem;font-weight:600;color:var(--gray)">${d.petType==='cat'?'🐱 Cat':'🐶 Dog'}</span></div><div class="dog-sub">Unit ${d.unit||'—'} · ${d.owner||'—'}${d.breed?' · '+d.breed:''}</div>${d.notes?`<div class="dog-sub" style="margin-top:2px;font-style:italic">${d.notes}</div>`:''}<div class="dog-sub" style="margin-top:4px;font-weight:700;color:var(--black)">${v} visit${v!==1?'s':''}</div></div><div style="display:flex;gap:6px;flex-direction:column"><button class="btn btn-ghost btn-sm" onclick="editDog('${d.id}')">✏️</button><button class="btn btn-red btn-sm" onclick="deleteDog('${d.id}')">🗑️</button></div></div>`;
+  }).join(''):'<div class="empty-state"><div class="es-icon">🐾</div><p>No pets registered yet.</p></div>';
+}
+
+function renderEarnings(){
+  const done=data.requests.filter(r=>r.status==='completed');
+  const total=done.reduce((a,r)=>a+Number(r.rate||0),0);
+  const w1=done.filter(r=>r.walker==='Walker 1'||r.walker==='Both').reduce((a,r)=>a+Number(r.rate||0)/(r.walker==='Both'?2:1),0);
+  const w2=done.filter(r=>r.walker==='Walker 2'||r.walker==='Both').reduce((a,r)=>a+Number(r.rate||0)/(r.walker==='Both'?2:1),0);
+  document.getElementById('e-total').textContent='$'+total.toFixed(0);
+  document.getElementById('e-w1').textContent='$'+w1.toFixed(0);
+  document.getElementById('e-w2').textContent='$'+w2.toFixed(0);
+  document.getElementById('e-subtitle').textContent=`from ${done.length} completed walk${done.length!==1?'s':''}`;
+  const months={};done.forEach(r=>{const mo=r.date.slice(0,7);months[mo]=(months[mo]||0)+Number(r.rate||0);});
+  const mKeys=Object.keys(months).sort(),maxV=Math.max(...Object.values(months),1);
+  document.getElementById('monthly-chart').innerHTML=mKeys.length?mKeys.map(mo=>{const lbl=new Date(mo+'-02').toLocaleString('default',{month:'long',year:'numeric'});return`<div class="month-row"><span class="month-name">${lbl}</span><div class="month-bar-wrap"><div class="month-bar-bg"><div class="month-bar-fill" style="width:${(months[mo]/maxV*100).toFixed(1)}%"></div></div></div><span class="month-amount">$${months[mo]}</span></div>`;}).join(''):'<p style="color:var(--gray);font-size:.85rem">No earnings yet.</p>';
+  document.getElementById('earnings-list').innerHTML=done.slice(-5).reverse().map(r=>`<div class="walk-card"><div class="walk-dog-avatar ${dogColor(r.dog)}">${petEmoji(r.petType)}</div><div class="walk-info"><div class="walk-dog-name">${r.dog}</div><div class="walk-meta"><span>${r.date}</span><span class="dot">·</span><span>${walkerDisplay(r.walker)}</span></div></div><div class="walk-right"><span style="font-family:var(--font-display);font-size:1.2rem;font-weight:700">$${r.rate}</span></div></div>`).join('')||'<div class="empty-state"><div class="es-icon">💸</div><p>Complete visits to see earnings.</p></div>';
+}
+
+// ── WALK FORM (ADD + EDIT) ────────────────────────────────
+let editingWalkId=null;
+function resetWalkForm(){
+  editingWalkId=null;
+  document.getElementById('form-eyebrow').textContent='Schedule';
+  document.getElementById('form-heading').innerHTML='New walk<br><em>request</em>';
+  document.getElementById('form-submit').textContent='Add Walk Request';
+  document.getElementById('form-cancel').style.display='none';
+  ['f-dog','f-unit','f-owner','f-time','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-date').value=today();
+  document.getElementById('f-rate').value=data.settings.rate||15;
+  document.getElementById('f-duration').value='30';
+  selectWalker('Both');selectFormPetType('dog');
+}
+function editWalk(id){
+  const r=data.requests.find(x=>x.id===id);if(!r)return;
+  editingWalkId=id;
+  document.getElementById('form-eyebrow').textContent='Editing';
+  document.getElementById('form-heading').innerHTML=`Edit <em>${r.dog}</em>`;
+  document.getElementById('form-submit').textContent='Save Changes';
+  document.getElementById('form-cancel').style.display='';
+  document.getElementById('f-dog').value=r.dog;
+  document.getElementById('f-unit').value=r.unit||'';
+  document.getElementById('f-owner').value=r.owner||'';
+  document.getElementById('f-date').value=r.date;
+  document.getElementById('f-time').value=r.time||'';
+  document.getElementById('f-duration').value=r.duration||30;
+  document.getElementById('f-rate').value=r.rate||15;
+  document.getElementById('f-notes').value=r.notes||'';
+  selectWalker(r.walker||'Both');
+  selectFormPetType(r.petType||'dog');
+  showTab('new');
+}
+function cancelEdit(){resetWalkForm();showTab('log');}
+function submitForm(){
+  const dog=document.getElementById('f-dog').value.trim(),date=document.getElementById('f-date').value;
+  if(!dog||!date){toast('Please fill in pet name and date');return;}
+  const obj={dog,petType:selFormPetType,unit:document.getElementById('f-unit').value.trim(),owner:document.getElementById('f-owner').value.trim(),date,time:document.getElementById('f-time').value,duration:Number(document.getElementById('f-duration').value),rate:Number(document.getElementById('f-rate').value)||15,walker:selWalker,notes:document.getElementById('f-notes').value.trim()};
+  if(editingWalkId){
+    const r=data.requests.find(x=>x.id===editingWalkId);
+    if(r)Object.assign(r,obj);
+    toast('Walk updated!');
+  } else {
+    obj.id=uid('r');obj.status='pending';
+    data.requests.push(obj);
+    toast('Request added!');
+  }
+  save();resetWalkForm();showTab('log');
+}
+function markDone(id){const r=data.requests.find(x=>x.id===id);if(r){r.status='completed';save();renderAll();closeModal();toast('Walk marked as done!');}}
+function deleteWalk(id){
+  const r=data.requests.find(x=>x.id===id);if(!r)return;
+  showConfirm('Delete Walk?',`Delete the ${r.dog} walk on ${r.date}? This can't be undone.`,'Delete',()=>{
+    data.requests=data.requests.filter(x=>x.id!==id);save();renderAll();closeModal();toast('Walk deleted.');
+  });
+}
+
+// ── DOG FORM (ADD + EDIT) ─────────────────────────────────
+let editingDogId=null;
+function resetDogForm(){
+  editingDogId=null;
+  document.getElementById('dog-form-title').textContent='Add New Pet';
+  document.getElementById('dog-form-submit').textContent='Add Pet';
+  document.getElementById('dog-form-cancel').style.display='none';
+  ['nd-name','nd-unit','nd-breed','nd-owner','nd-notes'].forEach(id=>document.getElementById(id).value='');
+  selectPetType('dog');
+}
+function editDog(id){
+  const d=data.dogs.find(x=>x.id===id);if(!d)return;
+  editingDogId=id;
+  document.getElementById('dog-form-title').textContent='Edit '+d.name;
+  document.getElementById('dog-form-submit').textContent='Save Changes';
+  document.getElementById('dog-form-cancel').style.display='';
+  document.getElementById('nd-name').value=d.name;
+  document.getElementById('nd-unit').value=d.unit||'';
+  document.getElementById('nd-breed').value=d.breed||'';
+  document.getElementById('nd-owner').value=d.owner||'';
+  document.getElementById('nd-notes').value=d.notes||'';
+  selectPetType(d.petType||'dog');
+  // Scroll to form
+  document.getElementById('dog-form-title').scrollIntoView({behavior:'smooth'});
+}
+function cancelDogEdit(){resetDogForm();}
+function submitDogForm(){
+  const name=document.getElementById('nd-name').value.trim();
+  if(!name){toast('Please enter a pet name');return;}
+  if(editingDogId){
+    const d=data.dogs.find(x=>x.id===editingDogId);
+    if(d){d.name=name;d.petType=selNewPetType;d.unit=document.getElementById('nd-unit').value.trim();d.breed=document.getElementById('nd-breed').value.trim();d.owner=document.getElementById('nd-owner').value.trim();d.notes=document.getElementById('nd-notes').value.trim();}
+    toast('Pet updated!');
+  } else {
+    if(data.dogs.find(d=>d.name.toLowerCase()===name.toLowerCase())){toast('Pet already registered!');return;}
+    data.dogs.push({id:uid('d'),name,petType:selNewPetType,unit:document.getElementById('nd-unit').value.trim(),breed:document.getElementById('nd-breed').value.trim(),owner:document.getElementById('nd-owner').value.trim(),notes:document.getElementById('nd-notes').value.trim()});
+    toast('Pet added!');
+  }
+  save();resetDogForm();renderDogs();
+}
+function deleteDog(id){
+  const d=data.dogs.find(x=>x.id===id);if(!d)return;
+  showConfirm('Remove Pet?',`Remove ${d.name} from the registry? Walk history will be kept.`,'Remove',()=>{
+    data.dogs=data.dogs.filter(x=>x.id!==id);save();renderDogs();toast('Pet removed.');
+  });
+}
+
+// ── RESET ALL ─────────────────────────────────────────────
+function confirmResetAll(){
+  showConfirm('Reset Everything?','This will delete ALL walks, pets, and settings. This cannot be undone.','Reset All',()=>{
+    data={requests:[],dogs:[],settings:{w1:'Clark C.',w2:'Vayda H.',rate:15,handle:'$PawPals'}};
+    save();loadSettings();renderAll();toast('All data cleared.');showTab('home');
+  });
+}
+
+// ── DETAIL MODAL ──────────────────────────────────────────
+function openDetail(id){
+  const r=data.requests.find(x=>x.id===id);if(!r)return;
+  document.getElementById('modal-title').textContent=r.dog;
+  const drow=(l,v)=>`<div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gray)">${l}</span><span style="font-weight:600;font-size:.9rem">${v}</span></div>`;
+  document.getElementById('modal-body').innerHTML=`<div>${drow('Pet',petEmoji(r.petType)+' '+(r.petType==='cat'?'Cat':'Dog'))}${drow('Owner',r.owner||'—')}${drow('Unit',r.unit||'—')}${drow('Date',r.date)}${drow('Time',fmtTime(r.time)||'—')}${drow('Duration',r.duration+' min')}${drow('Rate','$'+r.rate)}${drow('Walker',walkerDisplay(r.walker))}${drow('Status',r.status)}${r.notes?drow('Notes',r.notes):''}</div>`;
+  const acts=document.getElementById('modal-actions');acts.innerHTML='';
+  // Edit button always
+  const be=document.createElement('button');be.className='btn btn-ghost';be.textContent='✏️ Edit';be.onclick=()=>{closeModal();editWalk(id);};acts.append(be);
+  if(r.status==='pending'){
+    const b1=document.createElement('button');b1.className='btn btn-black';b1.textContent='✓ Done';b1.onclick=()=>markDone(id);acts.append(b1);
+  }
+  const bd=document.createElement('button');bd.className='btn btn-red';bd.textContent='🗑️ Delete';bd.onclick=()=>{closeModal();deleteWalk(id);};acts.append(bd);
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+
+// ── INIT ──────────────────────────────────────────────────
+currentPayHandle=data.settings.handle||'$PawPals';
+document.getElementById('f-date').value=today();
+document.getElementById('f-rate').value=data.settings.rate||15;
+renderAll();
+</script>
+</body>
+</html>
