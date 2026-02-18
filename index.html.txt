@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +6,6 @@
 <title>Paw Pals</title>
 
 <!-- PWA Meta Tags -->
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Paw Pals">
@@ -17,7 +15,6 @@
 <meta name="description" content="Pet walking & care tracker for Paw Pals">
 
 <!-- App Icon (SVG data URI — works as apple-touch-icon via canvas fallback below) -->
-
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23111110'/%3E%3Cstop offset='100%25' stop-color='%232a2a28'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Ctext x='256' y='290' text-anchor='middle' font-size='220' fill='white'%3E🐾%3C/text%3E%3Ctext x='256' y='420' text-anchor='middle' font-family='Georgia,serif' font-size='72' font-weight='bold' fill='white' opacity='.85'%3EPaw Pals%3C/text%3E%3C/svg%3E">
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
@@ -203,12 +200,10 @@ textarea.form-control { min-height: 80px; resize: vertical; line-height: 1.5; }
 
 @media (max-width: 430px) { .app-shell { box-shadow: none; } .share-fab { right: 18px; } }
 </style>
-
 </head>
 <body>
 
 <!-- Install Banner -->
-
 <div class="install-banner" id="install-banner">
   🐾 Add <strong>Paw Pals</strong> to your Home Screen for the full app experience!
   <div class="ib-steps">Tap <strong>Share ↗</strong> then <strong>"Add to Home Screen"</strong></div>
@@ -216,7 +211,6 @@ textarea.form-control { min-height: 80px; resize: vertical; line-height: 1.5; }
 </div>
 
 <!-- Share Button -->
-
 <button class="share-fab" onclick="shareApp()" title="Share this app">↗</button>
 
 <div class="app-shell">
@@ -253,79 +247,76 @@ textarea.form-control { min-height: 80px; resize: vertical; line-height: 1.5; }
       <div id="home-upcoming"></div>
     </div>
 
-```
-<!-- NEW WALK -->
-<div id="screen-new" class="screen">
-  <div class="hero"><div class="hero-eyebrow">Schedule</div><div class="hero-heading">New walk<br><em>request</em></div></div>
-  <div class="form-section">
-    <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="f-dog" placeholder="e.g. Buddy" list="dog-suggestions" autocomplete="off"><datalist id="dog-suggestions"></datalist></div>
-    <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="ft-dog" onclick="selectFormPetType('dog')">🐶 Dog</div><div class="walker-chip" id="ft-cat" onclick="selectFormPetType('cat')">🐱 Cat</div></div></div>
-    <div class="form-grid"><div><label class="form-label">Unit #</label><input class="form-control" type="text" id="f-unit" placeholder="4B"></div><div><label class="form-label">Owner Name</label><input class="form-control" type="text" id="f-owner" placeholder="Mrs. Smith"></div></div>
-    <div class="form-grid"><div><label class="form-label">Date</label><input class="form-control" type="date" id="f-date"></div><div><label class="form-label">Time</label><input class="form-control" type="time" id="f-time"></div></div>
-    <div class="form-grid"><div><label class="form-label">Duration</label><select class="form-control" id="f-duration"><option value="15">15 min</option><option value="20">20 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">1 hour</option></select></div><div><label class="form-label">Rate ($)</label><input class="form-control" type="number" id="f-rate" value="15" min="1"></div></div>
-    <div class="form-row"><label class="form-label">Walker</label><div class="walker-selector"><div class="walker-chip active" id="wc-both" onclick="selectWalker('Both')">🤝 Both</div><div class="walker-chip" id="wc-walker1" onclick="selectWalker('Walker 1')">Walker 1</div><div class="walker-chip" id="wc-walker2" onclick="selectWalker('Walker 2')">Walker 2</div></div></div>
-    <div class="form-row"><label class="form-label">Notes</label><textarea class="form-control" id="f-notes" placeholder="Special instructions..."></textarea></div>
-    <button class="btn btn-black btn-full" style="padding:15px;font-size:.95rem" onclick="addRequest()">Add Walk Request</button>
-  </div>
-</div>
+    <!-- NEW WALK -->
+    <div id="screen-new" class="screen">
+      <div class="hero"><div class="hero-eyebrow">Schedule</div><div class="hero-heading">New walk<br><em>request</em></div></div>
+      <div class="form-section">
+        <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="f-dog" placeholder="e.g. Buddy" list="dog-suggestions" autocomplete="off"><datalist id="dog-suggestions"></datalist></div>
+        <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="ft-dog" onclick="selectFormPetType('dog')">🐶 Dog</div><div class="walker-chip" id="ft-cat" onclick="selectFormPetType('cat')">🐱 Cat</div></div></div>
+        <div class="form-grid"><div><label class="form-label">Unit #</label><input class="form-control" type="text" id="f-unit" placeholder="4B"></div><div><label class="form-label">Owner Name</label><input class="form-control" type="text" id="f-owner" placeholder="Mrs. Smith"></div></div>
+        <div class="form-grid"><div><label class="form-label">Date</label><input class="form-control" type="date" id="f-date"></div><div><label class="form-label">Time</label><input class="form-control" type="time" id="f-time"></div></div>
+        <div class="form-grid"><div><label class="form-label">Duration</label><select class="form-control" id="f-duration"><option value="15">15 min</option><option value="20">20 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">1 hour</option></select></div><div><label class="form-label">Rate ($)</label><input class="form-control" type="number" id="f-rate" value="15" min="1"></div></div>
+        <div class="form-row"><label class="form-label">Walker</label><div class="walker-selector"><div class="walker-chip active" id="wc-both" onclick="selectWalker('Both')">🤝 Both</div><div class="walker-chip" id="wc-walker1" onclick="selectWalker('Walker 1')">Walker 1</div><div class="walker-chip" id="wc-walker2" onclick="selectWalker('Walker 2')">Walker 2</div></div></div>
+        <div class="form-row"><label class="form-label">Notes</label><textarea class="form-control" id="f-notes" placeholder="Special instructions..."></textarea></div>
+        <button class="btn btn-black btn-full" style="padding:15px;font-size:.95rem" onclick="addRequest()">Add Walk Request</button>
+      </div>
+    </div>
 
-<!-- LOG -->
-<div id="screen-log" class="screen">
-  <div class="hero"><div class="hero-eyebrow">History</div><div class="hero-heading">Walk<br><em>log</em></div></div>
-  <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" type="text" id="search-input" placeholder="Search dogs, owners, units..."></div>
-  <div class="filter-row"><div class="filter-chip active" onclick="setFilter('all',this)">All</div><div class="filter-chip" onclick="setFilter('pending',this)">Pending</div><div class="filter-chip" onclick="setFilter('completed',this)">Completed</div><div class="filter-chip" onclick="setFilter('cancelled',this)">Cancelled</div></div>
-  <div id="log-list"></div>
-</div>
+    <!-- LOG -->
+    <div id="screen-log" class="screen">
+      <div class="hero"><div class="hero-eyebrow">History</div><div class="hero-heading">Walk<br><em>log</em></div></div>
+      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" type="text" id="search-input" placeholder="Search dogs, owners, units..."></div>
+      <div class="filter-row"><div class="filter-chip active" onclick="setFilter('all',this)">All</div><div class="filter-chip" onclick="setFilter('pending',this)">Pending</div><div class="filter-chip" onclick="setFilter('completed',this)">Completed</div><div class="filter-chip" onclick="setFilter('cancelled',this)">Cancelled</div></div>
+      <div id="log-list"></div>
+    </div>
 
-<!-- DOGS -->
-<div id="screen-dogs" class="screen">
-  <div class="hero"><div class="hero-eyebrow">Registry</div><div class="hero-heading">Our<br><em>pets</em></div></div>
-  <div id="dog-list"></div>
-  <div class="divider"></div>
-  <div class="form-section">
-    <div style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;margin-bottom:18px">Add New Pet</div>
-    <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="pt-dog" onclick="selectPetType('dog')">🐶 Dog</div><div class="walker-chip" id="pt-cat" onclick="selectPetType('cat')">🐱 Cat</div></div></div>
-    <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="nd-name" placeholder="Fluffy"></div>
-    <div class="form-grid"><div><label class="form-label">Unit</label><input class="form-control" type="text" id="nd-unit" placeholder="3A"></div><div><label class="form-label">Breed</label><input class="form-control" type="text" id="nd-breed" placeholder="Poodle"></div></div>
-    <div class="form-row"><label class="form-label">Owner Name</label><input class="form-control" type="text" id="nd-owner" placeholder="Smith family"></div>
-    <div class="form-row"><label class="form-label">Notes</label><input class="form-control" type="text" id="nd-notes" placeholder="Friendly, loves fetch"></div>
-    <button class="btn btn-black btn-full" style="padding:14px;font-size:.95rem" onclick="addDog()">Add Pet</button>
-  </div>
-</div>
+    <!-- DOGS -->
+    <div id="screen-dogs" class="screen">
+      <div class="hero"><div class="hero-eyebrow">Registry</div><div class="hero-heading">Our<br><em>pets</em></div></div>
+      <div id="dog-list"></div>
+      <div class="divider"></div>
+      <div class="form-section">
+        <div style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;margin-bottom:18px">Add New Pet</div>
+        <div class="form-row"><label class="form-label">Pet Type</label><div class="walker-selector"><div class="walker-chip active" id="pt-dog" onclick="selectPetType('dog')">🐶 Dog</div><div class="walker-chip" id="pt-cat" onclick="selectPetType('cat')">🐱 Cat</div></div></div>
+        <div class="form-row"><label class="form-label">Pet Name</label><input class="form-control" type="text" id="nd-name" placeholder="Fluffy"></div>
+        <div class="form-grid"><div><label class="form-label">Unit</label><input class="form-control" type="text" id="nd-unit" placeholder="3A"></div><div><label class="form-label">Breed</label><input class="form-control" type="text" id="nd-breed" placeholder="Poodle"></div></div>
+        <div class="form-row"><label class="form-label">Owner Name</label><input class="form-control" type="text" id="nd-owner" placeholder="Smith family"></div>
+        <div class="form-row"><label class="form-label">Notes</label><input class="form-control" type="text" id="nd-notes" placeholder="Friendly, loves fetch"></div>
+        <button class="btn btn-black btn-full" style="padding:14px;font-size:.95rem" onclick="addDog()">Add Pet</button>
+      </div>
+    </div>
 
-<!-- EARNINGS -->
-<div id="screen-earnings" class="screen">
-  <div class="hero"><div class="hero-eyebrow">Finance</div><div class="hero-heading">Earnings<br><em>tracker</em></div></div>
-  <div class="earnings-banner"><div class="eb-label">Total Earned</div><div class="eb-amount" id="e-total">$0</div><div class="eb-sub" id="e-subtitle">from 0 completed walks</div></div>
-  <div class="earnings-split"><div class="split-card"><div class="sc-label">Walker 1</div><div class="sc-amount" id="e-w1">$0</div></div><div class="split-card"><div class="sc-label">Walker 2</div><div class="sc-amount" id="e-w2">$0</div></div></div>
-  <div class="section-head"><h2>By Month</h2></div>
-  <div style="padding:0 24px;margin-bottom:28px" id="monthly-chart"></div>
-  <div class="section-head"><h2>Recent Walks</h2></div>
-  <div id="earnings-list"></div>
-</div>
+    <!-- EARNINGS -->
+    <div id="screen-earnings" class="screen">
+      <div class="hero"><div class="hero-eyebrow">Finance</div><div class="hero-heading">Earnings<br><em>tracker</em></div></div>
+      <div class="earnings-banner"><div class="eb-label">Total Earned</div><div class="eb-amount" id="e-total">$0</div><div class="eb-sub" id="e-subtitle">from 0 completed walks</div></div>
+      <div class="earnings-split"><div class="split-card"><div class="sc-label">Walker 1</div><div class="sc-amount" id="e-w1">$0</div></div><div class="split-card"><div class="sc-label">Walker 2</div><div class="sc-amount" id="e-w2">$0</div></div></div>
+      <div class="section-head"><h2>By Month</h2></div>
+      <div style="padding:0 24px;margin-bottom:28px" id="monthly-chart"></div>
+      <div class="section-head"><h2>Recent Walks</h2></div>
+      <div id="earnings-list"></div>
+    </div>
 
-<!-- PAY -->
-<div id="screen-pay" class="screen">
-  <div class="pay-hero"><div class="hero-eyebrow">Apple Cash</div><div class="hero-heading">Pay<br><em>right here</em></div></div>
-  <div class="qr-card">
-    <div class="qr-logo-row"><div class="qr-apple-badge"> Apple Cash</div></div>
-    <div class="qr-wrap"><canvas id="qr-canvas" width="200" height="200"></canvas><div class="qr-center-logo">🐾</div></div>
-    <div class="pay-handle" id="pay-handle-display">$PawPals</div>
-    <div class="pay-handle-sub">Scan to pay with Apple Cash</div>
-  </div>
-  <div class="pay-edit-row"><input class="pay-edit-input" type="text" id="pay-handle-input" placeholder="Enter your $Cashtag or Apple ID" value="$PawPals"><button class="btn btn-black btn-sm" onclick="updatePayHandle()">Update QR</button></div>
-  <div class="section-head"><h2>How to Pay</h2></div>
-  <div class="pay-methods">
-    <div class="pay-method-card"><div class="pay-method-icon">📷</div><div class="pay-method-label">Scan QR</div><div class="pay-method-sub">Open Camera and point at QR code</div></div>
-    <div class="pay-method-card"><div class="pay-method-icon">📲</div><div class="pay-method-label">Tap to Pay</div><div class="pay-method-sub">Hold phones together for Apple Pay</div></div>
-    <div class="pay-method-card"><div class="pay-method-icon">💬</div><div class="pay-method-label">iMessage</div><div class="pay-method-sub">Send Apple Cash via Messages</div></div>
-    <div class="pay-method-card"><div class="pay-method-icon">🔗</div><div class="pay-method-label">Share Link</div><div class="pay-method-sub">Send payment link via text</div></div>
-  </div>
-  <div class="pay-tip-card"><div class="pay-tip-icon">💡</div><div class="pay-tip-text">Set up Apple Cash Family in Wallet → Settings → Apple Cash → Family Sharing so both walkers share one account.</div></div>
-  <div style="padding:0 24px 8px"><button class="btn btn-ghost btn-full" style="padding:14px" onclick="showTab('earnings')">💰 View Earnings Tracker</button></div>
-</div>
-```
-
+    <!-- PAY -->
+    <div id="screen-pay" class="screen">
+      <div class="pay-hero"><div class="hero-eyebrow">Apple Cash</div><div class="hero-heading">Pay<br><em>right here</em></div></div>
+      <div class="qr-card">
+        <div class="qr-logo-row"><div class="qr-apple-badge"> Apple Cash</div></div>
+        <div class="qr-wrap"><canvas id="qr-canvas" width="200" height="200"></canvas><div class="qr-center-logo">🐾</div></div>
+        <div class="pay-handle" id="pay-handle-display">$PawPals</div>
+        <div class="pay-handle-sub">Scan to pay with Apple Cash</div>
+      </div>
+      <div class="pay-edit-row"><input class="pay-edit-input" type="text" id="pay-handle-input" placeholder="Enter your $Cashtag or Apple ID" value="$PawPals"><button class="btn btn-black btn-sm" onclick="updatePayHandle()">Update QR</button></div>
+      <div class="section-head"><h2>How to Pay</h2></div>
+      <div class="pay-methods">
+        <div class="pay-method-card"><div class="pay-method-icon">📷</div><div class="pay-method-label">Scan QR</div><div class="pay-method-sub">Open Camera and point at QR code</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">📲</div><div class="pay-method-label">Tap to Pay</div><div class="pay-method-sub">Hold phones together for Apple Pay</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">💬</div><div class="pay-method-label">iMessage</div><div class="pay-method-sub">Send Apple Cash via Messages</div></div>
+        <div class="pay-method-card"><div class="pay-method-icon">🔗</div><div class="pay-method-label">Share Link</div><div class="pay-method-sub">Send payment link via text</div></div>
+      </div>
+      <div class="pay-tip-card"><div class="pay-tip-icon">💡</div><div class="pay-tip-text">Set up Apple Cash Family in Wallet → Settings → Apple Cash → Family Sharing so both walkers share one account.</div></div>
+      <div style="padding:0 24px 8px"><button class="btn btn-ghost btn-full" style="padding:14px" onclick="showTab('earnings')">💰 View Earnings Tracker</button></div>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -338,7 +329,6 @@ textarea.form-control { min-height: 80px; resize: vertical; line-height: 1.5; }
 </div>
 
 <!-- MODAL -->
-
 <div class="modal-overlay" id="modal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -612,6 +602,5 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 document.getElementById('f-date').value=today();
 renderAll();
 </script>
-
 </body>
 </html>
